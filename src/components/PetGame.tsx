@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Heart, Fish, Coffee, Gift, Star, Crown } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import axios from 'axios';
+
 
 const PetGame = () => {
   const { toast } = useToast();
@@ -12,9 +14,44 @@ const PetGame = () => {
   const [level, setLevel] = useState(1);
   const [animation, setAnimation] = useState("");
   const [showLevelUp, setShowLevelUp] = useState(false);
+  const [id, setId] = useState(null);
   
   // Randomize pet image positions for more lively pet
   const [petPosition, setPetPosition] = useState({ x: 0, y: 0 });
+
+  const sendPetData = async () => {
+    const petData = {
+      id,
+      name: petName,
+      pictureURL: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400&h=400&ixlib=rb-4.0.3",
+      happiness,
+      energy,
+      hunger,
+      level,
+      experience: points,
+    };
+    
+    try {
+      if(petData.id == null) {
+        await axios.post("http://localhost:8082/pets/new", petData)
+        .then((response) => {
+          console.log(response.data);
+          setId(response.data.id);
+
+        });
+        console.log("Pet data sent successfully");
+      }
+      else {
+        await axios.put(`http://localhost:8082/pets/update/${petData.id}`, petData).then((response) => {
+          console.log(response.data);
+        });
+        console.log("Pet data updated successfully");
+      }
+    } catch (error) {
+      console.error("Error sending pet data", error);
+    }
+  };
+  
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,6 +77,7 @@ const PetGame = () => {
         title: "Action completed!",
         description: "+5 points for feeding your pet!",
       });
+      sendPetData();
       
       setTimeout(() => {
         setAnimation("");

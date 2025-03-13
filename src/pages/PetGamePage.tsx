@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Heart, Fish, Coffee, Gift, Star, Award, Crown, ThumbsUp, Check, ChevronUp, XCircle, X } from 'lucide-react';
-<<<<<<< HEAD
 import { usePetGame } from '@/contexts/PetGameContext';
-=======
-import { usePetGame } from '@/context/PetGameContext';
->>>>>>> 9e698c5 (changes3)
 
 const PetGamePage = () => {
   const { 
